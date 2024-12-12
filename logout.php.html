@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>logout.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #5f826b; font-style: italic;}
+.s3 { color: #67a37c; font-style: italic;}
+.s4 { color: #7a7e85;}
+.s5 { color: #bcbec4;}
+.s6 { color: #9876aa;}
+.s7 { color: #6aab73;}
+.s8 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+logout.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;?php</span>
+<span class="s2">/**</span>
+ <span class="s2">* Short description of the file's purpose</span>
+ <span class="s2">*</span>
+ <span class="s2">* PHP version 7.1</span>
+ <span class="s2">*</span>
+ <span class="s2">* </span><span class="s3">@author </span><span class="s2">Luke Saldaha</span>
+ <span class="s2">* </span><span class="s3">@date </span><span class="s2">2024-12-10</span>
+ <span class="s2">* </span><span class="s3">@title </span><span class="s2">Lab 4</span>
+ <span class="s2">*/</span>
+<span class="s4">/* 
+   Logout Page 
+   This script logs the user out by destroying their session and redirects them to the login page. 
+*/</span>
+
+<span class="s4">// Start or resume the current session</span>
+<span class="s5">session_start();</span>
+
+<span class="s4">// Remove all session variables</span>
+<span class="s5">session_unset();</span>
+
+<span class="s4">// Destroy the current session</span>
+<span class="s5">session_destroy();</span>
+
+<span class="s4">// Start a new session to set a logout confirmation message</span>
+<span class="s5">session_start();</span>
+<span class="s6">$_SESSION</span><span class="s5">[</span><span class="s7">'message'</span><span class="s5">] = </span><span class="s7">&quot;You have successfully logged out.&quot;</span><span class="s5">;</span>
+
+<span class="s4">// Redirect the user to the login page</span>
+<span class="s5">header(</span><span class="s7">&quot;Location: login.php&quot;</span><span class="s5">);</span>
+<span class="s0">exit</span><span class="s5">();</span>
+<span class="s0">?&gt;</span>
+</pre>
+</body>
+</html>

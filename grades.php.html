@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>grades.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #5f826b; font-style: italic;}
+.s3 { color: #67a37c; font-style: italic;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+.s6 { color: #bcbec4;}
+.s7 { color: #9876aa;}
+.s8 { color: #bcbec4;}
+.s9 { color: #d5b778;}
+.s10 { color: #bababa;}
+.s11 { color: #6aab73;}
+.s12 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+grades.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;?php</span>
+<span class="s2">/**</span>
+ <span class="s2">* Short description of the file's purpose</span>
+ <span class="s2">*</span>
+ <span class="s2">* PHP version 7.1</span>
+ <span class="s2">*</span>
+ <span class="s2">* </span><span class="s3">@author </span><span class="s2">Luke Saldaha</span>
+ <span class="s2">* </span><span class="s3">@date </span><span class="s2">2024-12-10</span>
+ <span class="s2">* </span><span class="s3">@title </span><span class="s2">Lab 4</span>
+ <span class="s2">*/</span>
+
+<span class="s4">/* Grades Page */</span>
+<span class="s0">require </span><span class="s5">'includes/header.php'</span><span class="s6">;</span>
+<span class="s0">require </span><span class="s5">'includes/functions.php'</span><span class="s6">;</span>
+
+<span class="s0">if </span><span class="s6">(!</span><span class="s0">isset</span><span class="s6">(</span><span class="s7">$_SESSION</span><span class="s6">[</span><span class="s5">'user'</span><span class="s6">])) {</span>
+    <span class="s7">$_SESSION</span><span class="s6">[</span><span class="s5">'message'</span><span class="s6">] = </span><span class="s5">&quot;You must log in to access this page.&quot;</span><span class="s6">;</span>
+    <span class="s6">header(</span><span class="s5">'Location: login.php'</span><span class="s6">);</span>
+    <span class="s0">exit</span><span class="s6">();</span>
+<span class="s6">}</span>
+<span class="s7">$user </span><span class="s6">= </span><span class="s7">$_SESSION</span><span class="s6">[</span><span class="s5">'user'</span><span class="s6">];</span>
+<span class="s0">?&gt;</span>
+<span class="s9">&lt;main </span><span class="s10">class</span><span class="s11">=&quot;container&quot;</span><span class="s9">&gt;</span>
+    <span class="s9">&lt;h1&gt;</span><span class="s8">Welcome, </span><span class="s0">&lt;?= </span><span class="s6">htmlspecialchars(</span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'first_name'</span><span class="s6">]) </span><span class="s0">?&gt;</span><span class="s9">&lt;/h1&gt;</span>
+    <span class="s9">&lt;p&gt;</span><span class="s8">Your personal details:</span><span class="s9">&lt;/p&gt;</span>
+    <span class="s9">&lt;ul&gt;</span>
+        <span class="s9">&lt;li&gt;</span><span class="s8">Email: </span><span class="s0">&lt;?= </span><span class="s6">htmlspecialchars(</span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'email'</span><span class="s6">]) </span><span class="s0">?&gt;</span><span class="s9">&lt;/li&gt;</span>
+        <span class="s9">&lt;li&gt;</span><span class="s8">Enrollment Date: </span><span class="s0">&lt;?= </span><span class="s6">htmlspecialchars(</span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'enrol_date'</span><span class="s6">]) </span><span class="s0">?&gt;</span><span class="s9">&lt;/li&gt;</span>
+        <span class="s9">&lt;li&gt;</span><span class="s8">Last Access: </span><span class="s0">&lt;?= </span><span class="s6">htmlspecialchars(</span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'last_access'</span><span class="s6">]) </span><span class="s0">?&gt;</span><span class="s9">&lt;/li&gt;</span>
+    <span class="s9">&lt;/ul&gt;</span>
+    <span class="s12">&lt;!-- Add grades table here --&gt;</span>
+<span class="s9">&lt;/main&gt;</span>
+<span class="s0">&lt;?php require </span><span class="s5">'includes/footer.php'</span><span class="s6">; </span><span class="s0">?&gt;</span>
+</pre>
+</body>
+</html>

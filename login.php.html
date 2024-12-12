@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>login.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #5f826b; font-style: italic;}
+.s3 { color: #67a37c; font-style: italic;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+.s6 { color: #bcbec4;}
+.s7 { color: #9876aa;}
+.s8 { color: #2aacb8;}
+.s9 { color: #bcbec4;}
+.s10 { color: #7a7e85;}
+.s11 { color: #d5b778;}
+.s12 { color: #bababa;}
+.s13 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+login.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;?php</span>
+<span class="s2">/**</span>
+ <span class="s2">* Short description of the file's purpose</span>
+ <span class="s2">*</span>
+ <span class="s2">* PHP version 7.1</span>
+ <span class="s2">*</span>
+ <span class="s2">* </span><span class="s3">@author </span><span class="s2">Luke Saldaha</span>
+ <span class="s2">* </span><span class="s3">@date </span><span class="s2">2024-12-10</span>
+ <span class="s2">* </span><span class="s3">@title </span><span class="s2">Lab 4</span>
+ <span class="s2">*/</span>
+<span class="s4">/* 
+   Login Page 
+   This script handles user login by verifying email and password, starting sessions, 
+   setting cookies, and redirecting to the grades page on success. 
+*/</span>
+
+
+<span class="s0">require </span><span class="s5">'db_connect.php'</span><span class="s6">;  </span><span class="s4">// Include database connection</span>
+
+<span class="s4">// Now you can use $conn to query the database</span>
+<span class="s4">// Your login logic goes here...</span>
+
+
+<span class="s0">require </span><span class="s5">'includes/header.php'</span><span class="s6">;</span>
+<span class="s0">require </span><span class="s5">'includes/functions.php'</span><span class="s6">;</span>
+
+<span class="s4">// Initialize an empty error message</span>
+<span class="s7">$error_message </span><span class="s6">= </span><span class="s5">''</span><span class="s6">;</span>
+
+<span class="s4">// Establish a database connection</span>
+<span class="s7">$conn </span><span class="s6">= pg_connect(</span><span class="s5">&quot;host=localhost dbname=your_database_name user=your_user_name password=your_password&quot;</span><span class="s6">);</span>
+
+<span class="s4">// Check if the connection to the database was successful</span>
+<span class="s0">if </span><span class="s6">(!</span><span class="s7">$conn</span><span class="s6">) {</span>
+    <span class="s0">die</span><span class="s6">(</span><span class="s5">&quot;Database connection failed: &quot; </span><span class="s6">. pg_last_error());</span>
+<span class="s6">}</span>
+
+<span class="s4">// Handle form submission when the form is submitted via POST</span>
+<span class="s0">if </span><span class="s6">(</span><span class="s7">$_SERVER</span><span class="s6">[</span><span class="s5">'REQUEST_METHOD'</span><span class="s6">] === </span><span class="s5">'POST'</span><span class="s6">) {</span>
+    <span class="s4">// Sanitize and trim input fields</span>
+    <span class="s7">$email </span><span class="s6">= filter_var(trim(</span><span class="s7">$_POST</span><span class="s6">[</span><span class="s5">'email'</span><span class="s6">]), FILTER_SANITIZE_EMAIL);</span>
+    <span class="s7">$password </span><span class="s6">= trim(</span><span class="s7">$_POST</span><span class="s6">[</span><span class="s5">'password'</span><span class="s6">]);</span>
+
+    <span class="s4">// Fetch the user by email using a secure query</span>
+    <span class="s7">$user </span><span class="s6">= getUserByEmail(</span><span class="s7">$conn</span><span class="s6">, </span><span class="s7">$email</span><span class="s6">);</span>
+
+    <span class="s4">// Validate password and user existence</span>
+    <span class="s0">if </span><span class="s6">(</span><span class="s7">$user </span><span class="s6">&amp;&amp; password_verify(</span><span class="s7">$password</span><span class="s6">, </span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'password'</span><span class="s6">])) {</span>
+        <span class="s4">/* 
+           Successful Login Logic 
+           Set session variables, create login cookie, update last access time, 
+           and redirect to the grades page. 
+        */</span>
+        <span class="s7">$_SESSION</span><span class="s6">[</span><span class="s5">'user'</span><span class="s6">] = </span><span class="s7">$user</span><span class="s6">;</span>
+
+        <span class="s4">// Set a persistent login cookie (valid for 30 days)</span>
+        <span class="s6">setcookie(</span><span class="s5">'LOGIN_COOKIE'</span><span class="s6">, </span><span class="s7">$email</span><span class="s6">, time() + </span><span class="s8">30 </span><span class="s6">* </span><span class="s8">24 </span><span class="s6">* </span><span class="s8">60 </span><span class="s6">* </span><span class="s8">60</span><span class="s6">, </span><span class="s5">'/'</span><span class="s6">, </span><span class="s5">''</span><span class="s6">, false, true);</span>
+
+        <span class="s4">// Update the last access time in the database</span>
+        <span class="s6">updateLastAccess(</span><span class="s7">$conn</span><span class="s6">, </span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'id'</span><span class="s6">]);</span>
+
+        <span class="s4">// Log successful login</span>
+        <span class="s6">logActivity(</span><span class="s5">&quot;User </span><span class="s6">{</span><span class="s7">$user</span><span class="s6">[</span><span class="s5">'email'</span><span class="s6">]} </span><span class="s5">logged in.&quot;</span><span class="s6">);</span>
+
+        <span class="s4">// Redirect to the grades page</span>
+        <span class="s6">header(</span><span class="s5">'Location: grades.php'</span><span class="s6">);</span>
+        <span class="s0">exit</span><span class="s6">;</span>
+    <span class="s6">} </span><span class="s0">else </span><span class="s6">{</span>
+        <span class="s4">/* 
+           Invalid Credentials Logic 
+           Display an error message and log the failed attempt. 
+        */</span>
+        <span class="s7">$error_message </span><span class="s6">= </span><span class="s5">&quot;Invalid email or password.&quot;</span><span class="s6">;</span>
+        <span class="s6">logActivity(</span><span class="s5">&quot;Failed login attempt for email: </span><span class="s7">$email</span><span class="s5">.&quot;</span><span class="s6">);</span>
+    <span class="s6">}</span>
+<span class="s6">}</span>
+<span class="s0">?&gt;</span>
+
+<span class="s10">&lt;!-- Login Form HTML --&gt;</span>
+<span class="s11">&lt;main </span><span class="s12">class</span><span class="s13">=&quot;form-signin w-100 m-auto&quot;</span><span class="s11">&gt;</span>
+    <span class="s11">&lt;form </span><span class="s12">method</span><span class="s13">=&quot;POST&quot;</span><span class="s11">&gt;</span>
+        <span class="s11">&lt;h1 </span><span class="s12">class</span><span class="s13">=&quot;h3 mb-3 fw-normal&quot;</span><span class="s11">&gt;</span><span class="s9">Sign in</span><span class="s11">&lt;/h1&gt;</span>
+
+        <span class="s10">&lt;!-- Display Error Message --&gt;</span>
+        <span class="s0">&lt;?php if </span><span class="s6">(!</span><span class="s0">empty</span><span class="s6">(</span><span class="s7">$error_message</span><span class="s6">)): </span><span class="s0">?&gt;</span>
+            <span class="s11">&lt;div </span><span class="s12">class</span><span class="s13">=&quot;alert alert-danger&quot; </span><span class="s12">role</span><span class="s13">=&quot;alert&quot;</span><span class="s11">&gt;</span>
+                <span class="s0">&lt;?= </span><span class="s6">htmlspecialchars(</span><span class="s7">$error_message</span><span class="s6">) </span><span class="s0">?&gt;</span>
+            <span class="s11">&lt;/div&gt;</span>
+        <span class="s0">&lt;?php endif</span><span class="s6">; </span><span class="s0">?&gt;</span>
+
+        <span class="s10">&lt;!-- Email Input Field --&gt;</span>
+        <span class="s11">&lt;div </span><span class="s12">class</span><span class="s13">=&quot;form-floating&quot;</span><span class="s11">&gt;</span>
+            <span class="s11">&lt;input </span><span class="s12">type</span><span class="s13">=&quot;email&quot; </span><span class="s12">class</span><span class="s13">=&quot;form-control&quot; </span><span class="s12">name</span><span class="s13">=&quot;email&quot; </span><span class="s12">placeholder</span><span class="s13">=&quot;name@example.com&quot; </span><span class="s12">required</span><span class="s11">&gt;</span>
+            <span class="s11">&lt;label </span><span class="s12">for</span><span class="s13">=&quot;email&quot;</span><span class="s11">&gt;</span><span class="s9">Email address</span><span class="s11">&lt;/label&gt;</span>
+        <span class="s11">&lt;/div&gt;</span>
+
+        <span class="s10">&lt;!-- Password Input Field --&gt;</span>
+        <span class="s11">&lt;div </span><span class="s12">class</span><span class="s13">=&quot;form-floating&quot;</span><span class="s11">&gt;</span>
+            <span class="s11">&lt;input </span><span class="s12">type</span><span class="s13">=&quot;password&quot; </span><span class="s12">class</span><span class="s13">=&quot;form-control&quot; </span><span class="s12">name</span><span class="s13">=&quot;password&quot; </span><span class="s12">placeholder</span><span class="s13">=&quot;Password&quot; </span><span class="s12">required</span><span class="s11">&gt;</span>
+            <span class="s11">&lt;label </span><span class="s12">for</span><span class="s13">=&quot;password&quot;</span><span class="s11">&gt;</span><span class="s9">Password</span><span class="s11">&lt;/label&gt;</span>
+        <span class="s11">&lt;/div&gt;</span>
+
+        <span class="s10">&lt;!-- Submit Button --&gt;</span>
+        <span class="s11">&lt;button </span><span class="s12">class</span><span class="s13">=&quot;btn btn-primary w-100 py-2&quot; </span><span class="s12">type</span><span class="s13">=&quot;submit&quot;</span><span class="s11">&gt;</span><span class="s9">Sign in</span><span class="s11">&lt;/button&gt;</span>
+    <span class="s11">&lt;/form&gt;</span>
+<span class="s11">&lt;/main&gt;</span>
+
+<span class="s10">&lt;!-- Include the footer --&gt;</span>
+<span class="s0">&lt;?php require </span><span class="s5">'includes/footer.php'</span><span class="s6">; </span><span class="s0">?&gt;</span>
+</pre>
+</body>
+</html>
